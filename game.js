@@ -1,5 +1,6 @@
+
 var isNewGame = true;//to determine if a new is started or a game is loaded ( false for load true for new game)
-var isGameEnded = false;
+var isGameEnded = false;//to determine if the game is ended
 (function () {
 
     var CSS = {
@@ -112,40 +113,40 @@ var isGameEnded = false;
         roll(0);
         loop();
     }
-    function selectionMenuDraw() {
+    function selectionMenuDraw() {//draws the game mode selection menu and after an option is chosen removes the menu and calls the game
 
         $('<div/>', { id: 'selection-menu' }).css(CSS.selection).appendTo('body');
         $('<div/>', { id: 'welcome-message' }).css(CSS.welcomeMessage).appendTo('#selection-menu');
         $('#welcome-message').text("Welcome to Ping Pong Game, Select Your Game Mode");
         $('<button/>', { id: 'button1' }).css($.extend(CSS.button1, CSS.buttons))
             .appendTo('#selection-menu');
-        $('#button1').text("2 Player");
+        $('#two-player-button').text("2 Player");
         $('<button/>', { id: 'button2' }).css($.extend(CSS.button2, CSS.buttons))
             .appendTo('#selection-menu');
-        $('#button2').text("Player vs Cpu");
+        $('#player-vs-cpu').text("Player vs Cpu");
         $('<button/>', { id: 'button3' }).css($.extend(CSS.button3, CSS.buttons))
             .appendTo('#selection-menu');
-        $('#button3').text("Cpu vs Cpu");
-        
+        $('#cpu-vs-cpu').text("Cpu vs Cpu");
 
 
 
 
 
-        $("#button1").click(function () {
+
+        $("#two-player-button").click(function () {
 
             CONSTS.mode = '2Player';
             draw();
             $("#selection-menu").remove();
         });
-        $("#button2").click(function () {
+        $("#player-vs-cpu").click(function () {
 
             CONSTS.mode = 'PlayerVsCpu';
             CONSTS.cpuModel = 'yFollow';
             draw();
             $("#selection-menu").remove();
         });
-        $("#button3").click(function () {
+        $("#cpu-vs-cpu").click(function () {
 
             CONSTS.mode = 'CpuVsCpu';
             CONSTS.cpuModel = 'yFollow';
@@ -168,8 +169,8 @@ var isGameEnded = false;
             .appendTo('#pong-game');
         $('<div/>', { id: 'stick-2' }).css($.extend(CSS.stick2, CSS.stick))
             .appendTo('#pong-game');
-            
-      
+
+
     }
 
     function setEvents() {
@@ -198,7 +199,7 @@ var isGameEnded = false;
             }
         });
     }
-    $(window).on("unload", function (e) {
+    $(window).on("unload", function (e) {//stores the game data when window is closed or refreshed
         if (isGameEnded === false) {
             localStorage.setItem("myCss", JSON.stringify(CSS));
             localStorage.setItem("myConsts", JSON.stringify(CONSTS));
@@ -215,7 +216,7 @@ var isGameEnded = false;
             } else if (CONSTS.mode === 'CpuVsCpu') {
                 let s1Speed = calcStickSpeed(1);
                 let s2Speed = calcStickSpeed(2);
-                return [ s1Speed, s2Speed ];
+                return [s1Speed, s2Speed];
             } else {
                 return;
             }
@@ -224,14 +225,13 @@ var isGameEnded = false;
         }
     }
 
-    function calcStickSpeed(stickNum) {
+    function calcStickSpeed(stickNum) {//calculates the speed of the given sstick when ai is controlling it
         var array = [0, CSS.stick1, CSS.stick2];
 
 
         if (CONSTS.cpuModel === 'yFollow') {
-           
             if (CSS.ball.top > array[stickNum].top) {
-                if (stickNum === 1) {  return CONSTS.stick1Speed = 6 }
+                if (stickNum === 1) { return CONSTS.stick1Speed = 6 }
                 else { return CONSTS.stick2Speed = 6 }
             }
             else if (CSS.ball.top < array[stickNum].top) {
@@ -239,44 +239,32 @@ var isGameEnded = false;
                 else { return CONSTS.stick2Speed = -6 }
             }
             else {
-                if (stickNum === 1) { 
-                    return CONSTS.stick1Speed = 0; 
+                if (stickNum === 1) {
+                    return CONSTS.stick1Speed = 0;
                 }
-                else { 
-                    return CONSTS.stick2Speed = 0; 
+                else {
+                    return CONSTS.stick2Speed = 0;
                 }
             }
-        }  else {
+        } else {
             return null;
         }
     }
     function loop() {
         window.pongLoop = setInterval(function () {
-            
+
             if (CONSTS.mode === 'PlayerVsCpu') {
 
-                var speed=cpuController("speed");
-                CONSTS.stick2Speed=speed;
-                
-                
-
+                var speed = cpuController("speed");
+                CONSTS.stick2Speed = speed;
             }
             else if (CONSTS.mode === 'CpuVsCpu') {
 
-                var speeds=cpuController("speed");
-                /*if (CSS.stick2.top <= 0 || CSS.stick2.top >= CSS.arena.height - CSS.stick2.height) {
-                    CONSTS.stick2Speed = CONSTS.stick2Speed * -1;
-                }
-                if (CSS.stick1.top <= 0 || CSS.stick1.top >= CSS.arena.height - CSS.stick1.height) {
-                    CONSTS.stick1Speed = CONSTS.stick1Speed * -1;
-                }*/
-                CONSTS.stick1Speed=speeds[0];
-
-                CONSTS.stick2Speed=speeds[1];
-                
-
+                var speeds = cpuController("speed");
+                CONSTS.stick1Speed = speeds[0];
+                CONSTS.stick2Speed = speeds[1];
             }
-            
+
             CSS.stick1.top += CONSTS.stick1Speed;
             CSS.stick2.top += CONSTS.stick2Speed;
 
@@ -307,20 +295,14 @@ var isGameEnded = false;
 
 
             $('#pong-ball').css({ top: CSS.ball.top, left: CSS.ball.left });
-
-            if (CSS.ball.left <= CSS.stick.width) {
+          //  CSS.ball.left <= CSS.stick.width
+            if ( CSS.stick.width-5>=CSS.ball.left) {
                 CSS.ball.top > CSS.stick1.top && CSS.ball.top < CSS.stick1.top + CSS.stick.height && (CONSTS.ballLeftSpeed = CONSTS.ballLeftSpeed * -1) || roll(2)//if winner is right send 2 ;
-
             }
-            if (CSS.ball.left >= CSS.arena.width - CSS.stick.width - CSS.ball.width) {
-
+            if (CSS.ball.left-5 >= CSS.arena.width - CSS.stick.width - CSS.ball.width) {
                 CSS.ball.top > CSS.stick2.top && CSS.ball.top < CSS.stick2.top + CSS.stick.height && (CONSTS.ballLeftSpeed = CONSTS.ballLeftSpeed * -1) || roll(1)//if winner is left send 1;
-
             }
-            /*
-                        if (CSS.ball.left >= CSS.arena.width - CSS.ball.width - CSS.stick.width) {
-                            roll();
-                        }*/
+
         }, CONSTS.gameSpeed);
     }
 
@@ -343,7 +325,7 @@ var isGameEnded = false;
             clearInterval(window.pongLoop);
             window.pongLoop = null; //finishes the game if one of the players reach max score
         }
-        if (isNewGame === true) {
+        if (isNewGame === true) {//only locate ball in the middle if new round is started
             CSS.ball.top = CSS.arena.height / 2;
             CSS.ball.left = CSS.arena.width / 2;
 
