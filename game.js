@@ -1,6 +1,6 @@
-
 var isNewGame = true;//to determine if a new is started or a game is loaded ( false for load true for new game)
-var isGameEnded = false;//to determine if the game is ended
+var isGameEnded = false;//to determine if the game is ended 
+
 (function () {
 
     var CSS = {
@@ -49,6 +49,8 @@ var isGameEnded = false;//to determine if the game is ended
             borderRadius: 50,
             background: '#C6A62F'
         },
+       
+
         line: {
             width: 0,
             height: 600,
@@ -118,13 +120,13 @@ var isGameEnded = false;//to determine if the game is ended
         $('<div/>', { id: 'selection-menu' }).css(CSS.selection).appendTo('body');
         $('<div/>', { id: 'welcome-message' }).css(CSS.welcomeMessage).appendTo('#selection-menu');
         $('#welcome-message').text("Welcome to Ping Pong Game, Select Your Game Mode");
-        $('<button/>', { id: 'button1' }).css($.extend(CSS.button1, CSS.buttons))
+        $('<button/>', { id: 'two-player-button' }).css($.extend(CSS.button1, CSS.buttons))
             .appendTo('#selection-menu');
         $('#two-player-button').text("2 Player");
-        $('<button/>', { id: 'button2' }).css($.extend(CSS.button2, CSS.buttons))
+        $('<button/>', { id: 'player-vs-cpu' }).css($.extend(CSS.button2, CSS.buttons))
             .appendTo('#selection-menu');
         $('#player-vs-cpu').text("Player vs Cpu");
-        $('<button/>', { id: 'button3' }).css($.extend(CSS.button3, CSS.buttons))
+        $('<button/>', { id: 'cpu-vs-cpu' }).css($.extend(CSS.button3, CSS.buttons))
             .appendTo('#selection-menu');
         $('#cpu-vs-cpu').text("Cpu vs Cpu");
 
@@ -174,7 +176,7 @@ var isGameEnded = false;//to determine if the game is ended
     }
 
     function setEvents() {
-        $(document).on('keydown', function (e) {
+        $(document).on('keydown', function (e) {//accept keystrokes depending on game mode
             if (e.keyCode == 87 && CONSTS.mode !== 'CpuVsCpu') {
                 CONSTS.stick1Speed = -6;
             }
@@ -208,7 +210,7 @@ var isGameEnded = false;//to determine if the game is ended
             localStorage.clear();
         }
     });
-    function cpuController(request) {
+    function cpuController(request) {//depending on game mode calculate stick or sticks speed
         if (request === 'speed') {
             if (CONSTS.mode === 'PlayerVsCpu') {
                 let s2Speed = calcStickSpeed(2);
@@ -225,7 +227,7 @@ var isGameEnded = false;//to determine if the game is ended
         }
     }
 
-    function calcStickSpeed(stickNum) {//calculates the speed of the given sstick when ai is controlling it
+    function calcStickSpeed(stickNum) {//calculates the speed of the given stick when ai is controlling it, ai follows the ball's y-axis 
         var array = [0, CSS.stick1, CSS.stick2];
 
 
@@ -342,7 +344,7 @@ var isGameEnded = false;//to determine if the game is ended
 
     }
 
-    if ("myCss" in localStorage) {
+    if ("myCss" in localStorage) {//gets the saved game data from local storage 
 
         CONSTS = JSON.parse(window.localStorage.getItem("myConsts"));
         CSS = JSON.parse(window.localStorage.getItem("myCss"));
