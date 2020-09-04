@@ -110,11 +110,24 @@ var isGameEnded = false;
         $('<button/>', { id: 'button2' }).css(CSS.button1).appendTo('#selection-menu');
         $('#button2').text("Player vs Cpu");
         $('<button/>', { id: 'button3' }).css(CSS.button1).appendTo('#selection-menu');
-        $('#button3').text("2 Player");
+        $('#button3').text("Cpu vs Cpu");
 
+
+        $("#button1").click(function () {
+            
+            CONSTS.mode='2Player';
+            draw();
+            $("#selection-menu").remove();
+        });
         $("#button2").click(function () {
             
             CONSTS.mode='PlayerVsCpu';
+            draw();
+            $("#selection-menu").remove();
+        });
+        $("#button3").click(function () {
+            
+            CONSTS.mode='CpuVsCpu';
             draw();
             $("#selection-menu").remove();
         });
@@ -138,14 +151,18 @@ var isGameEnded = false;
                 CONSTS.stick2Speed=-6;
 
             }
+            if(CONSTS.mode==='CpuVsCpu'){
+                CONSTS.stick1Speed=-6;
+                CONSTS.stick2Speed=-6;
+            }
     }
 
     function setEvents() {
         $(document).on('keydown', function (e) {
-            if (e.keyCode == 87) {
+            if (e.keyCode == 87 && CONSTS.mode!=='CpuVsCpu') {
                 CONSTS.stick1Speed = -6;
             }
-            if (e.keyCode == 83) {
+            if (e.keyCode == 83 && CONSTS.mode!=='CpuVsCpu') {
                 CONSTS.stick1Speed = 6;
             }
             if (e.keyCode == 38 && CONSTS.mode==='2Player') {
@@ -158,7 +175,7 @@ var isGameEnded = false;
         });
 
         $(document).on('keyup', function (e) {
-            if (e.keyCode == 87 || e.keyCode == 83) {
+            if (e.keyCode == 87 || e.keyCode == 83 && CONSTS.mode!=='CpuVsCpu') {
                 CONSTS.stick1Speed = 0;
             }
             if ((e.keyCode == 38 || e.keyCode == 40)&& CONSTS.mode==='2Player') {
@@ -183,6 +200,17 @@ var isGameEnded = false;
                 
                 if(CSS.stick2.top<=0 ||CSS.stick2.top >= CSS.arena.height - CSS.stick2.height){
                     CONSTS.stick2Speed =CONSTS.stick2Speed*-1;
+                }
+                
+            }
+            else if(CONSTS.mode==='CpuVsCpu'){
+                
+                
+                if(CSS.stick2.top<=0 ||CSS.stick2.top >= CSS.arena.height - CSS.stick2.height){
+                    CONSTS.stick2Speed =CONSTS.stick2Speed*-1;
+                }
+                if(CSS.stick1.top<=0 ||CSS.stick1.top >= CSS.arena.height - CSS.stick1.height){
+                    CONSTS.stick1Speed =CONSTS.stick1Speed*-1;
                 }
                 
             }
