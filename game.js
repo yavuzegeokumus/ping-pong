@@ -1,7 +1,7 @@
+{
 var isNewGame = true;//to determine if a new is started or a game is loaded ( false for load true for new game)
 var isGameEnded = false;//to determine if the game is ended 
-
-(function () {
+document.body.innerHTML = "";
 
     var CSS = {
         selection: {
@@ -201,7 +201,7 @@ var isGameEnded = false;//to determine if the game is ended
             }
         });
     }
-    $(window).on("unload", function (e) {//stores the game data when window is closed or refreshed
+    window.addEventListener('unload', function(event) {//stores the game data when window is closed or refreshed
         if (isGameEnded === false) {
             localStorage.setItem("myCss", JSON.stringify(CSS));
             localStorage.setItem("myConsts", JSON.stringify(CONSTS));
@@ -354,5 +354,4 @@ var isGameEnded = false;//to determine if the game is ended
     start();
 
 
-}
-)();
+}({});
